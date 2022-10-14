@@ -47,7 +47,7 @@ class DataFlash:
                     break
                 DFdict = DFmsg.to_dict()
                 if 'mavpackettype' in DFdict: del DFdict['mavpackettype']
-                DFdict = {'DateTime': datetime.datetime.utcfromtimestamp(DFmsg._timestamp), **DFdict}
+                DFdict = {'DateTime': datetime.datetime.fromtimestamp(DFmsg._timestamp), **DFdict}
                 # list append of DFmsg
                 DFlist.append(DFdict)
             if len(DFlist) != 0:
@@ -66,14 +66,14 @@ class DataFlash:
         if self.isPlotable(dtype, column=column) == True:
             self.__extract__(dtype)
             if instance == None:
-                xaxis = (self.DFdict[dtype]['TimeUS'] * 1e-06).to_list()
+                xaxis = (self.DFdict[dtype]['DateTime']).to_list()
                 yaxis = (self.DFdict[dtype][column]).to_list()
             else:
-                xaxis = (self.DFdict[dtype].filter(pl.col("I") == instance)['TimeUS'] * 1e-06).to_list()
+                xaxis = (self.DFdict[dtype].filter(pl.col("I") == instance)['DateTime']).to_list()
                 yaxis = (self.DFdict[dtype].filter(pl.col("I") == instance)[column]).to_list()
             
             plt.figure(f'{dtype} - {column}')
-            plt.xlabel('Time (sec)')
+            plt.xlabel('Time')
             plt.ylabel(f'{column} ({self.DFunit[dtype][column]})')
             plt.plot(xaxis, yaxis)
             plt.show()

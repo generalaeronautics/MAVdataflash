@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='MAVdataflash',
-    version='2.0',    
+    version='2.1',    
     description='Read, analyze and visualize *.bin flight data logs recorded by ArduPilot',
     author='General Aeronautics',
     packages=['MAVdataflash'],
