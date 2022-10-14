@@ -1,0 +1,5 @@
+pymavlink>=2.4.35
+polars>=0.14.15
+pandas
+pyarrow
+matplotlib
