@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(name='MAVdataflash',
-    version='2.1',    
+    version='2.1.1',    
     description='Read, analyze and visualize *.bin flight data logs recorded by ArduPilot',
     author='General Aeronautics',
     packages=['MAVdataflash'],
-    install_requires=['pymavlink>=2.4.35',
-		      'polars>=0.14.15',
+    install_requires=['pymavlink<=2.4.35',
+		      'polars<=0.14.15',
 		      'pyarrow',
  		      'pandas',
 		      'matplotlib'               
