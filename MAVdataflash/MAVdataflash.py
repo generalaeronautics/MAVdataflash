@@ -52,9 +52,9 @@ class DataFlash:
                 DFlist.append(DFdict)
             if len(DFlist) != 0:
                 # updating dataframe from DF list
-                DF = pl.DataFrame(DFlist, columns= self.DFdict[dtype].columns)
+                DF = pl.DataFrame(DFlist)
                 DF = DF.with_columns(pl.col("DateTime").dt.cast_time_unit(tu="ms"))
-                self.DFdict[dtype] = pl.concat([self.DFdict[dtype], DF])
+                self.DFdict[dtype] = pl.concat([self.DFdict[dtype], DF], how='diagonal')
             else: return None
     
     def GetData(self, dtype, in_polars=False):
@@ -82,12 +82,12 @@ class DataFlash:
     
     def GetEvents(self, in_polars=False):
         self.__extract__('EV')
-        DFdict = self.DFdict['EV'].clone()
-        Events_DF = DFdict.apply(lambda column: (column[1], __event_id__[column[2]]))
+        DF = self.DFdict['EV'].clone()
+        Events_DF = DF.apply(lambda column: (column[1], __event_id__[column[2]]))
         Events_DF = Events_DF.rename({"column_0": "TimeUS", "column_1": "Event"})
-        DFdict = DFdict.join(Events_DF, on="TimeUS")
-        if in_polars == True: return DFdict
-        else: return DFdict.to_pandas()
+        DF = DF.join(Events_DF, on="TimeUS")
+        if in_polars == True: return DF
+        else: return DF.to_pandas()
     
     def GetColumns(self, dtype):
         return self.DFdict[dtype].columns
