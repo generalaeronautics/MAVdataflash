@@ -106,10 +106,11 @@ class DataFlash:
         else: return Event.to_pandas()
     
     # Function to return PARAMS of mission 
-    def GetPARAMS(self, in_polars=False):
+    def GetPARAMS(self, in_dict= False, in_polars=False):
         self.__extract__('PARM')
         PARM = self.DFdict['PARM'][['Name', 'Value']].clone()
-        if in_polars == True: return PARM
+        if in_dict == True: return self.DFdecode.params
+        elif in_polars == True: return PARM
         else: return PARM.to_pandas()
         
     # Function to return value for PARAM command 

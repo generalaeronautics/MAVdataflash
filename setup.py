@@ -4,7 +4,7 @@ with open('requirements.txt') as req:
     install_requires = req.read()
 
 setup(name='MAVdataflash',
-    version='2.3',    
+    version='2.3.1',    
     description='Read, analyze and visualize *.bin flight data logs recorded by ArduPilot',
     author='General Aeronautics',
     packages=['MAVdataflash'],

@@ -38,6 +38,9 @@ analysis.GetEvents(in_polars=True)
 # Return the pandas dataframe of PARM(Commands) with Values
 analysis.GetPARAMS()
 
+# Return Params in dictionary data type
+analysis.GetPARAMS(in_dict=True)
+
 # Return in polars dataframe
 analysis.GetPARAMS(in_polars=True)
 ```
