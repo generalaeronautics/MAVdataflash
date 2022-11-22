@@ -35,6 +35,19 @@ analysis.GetEvents(in_polars=True)
 ```
 
 ```python
+# Return the pandas dataframe of PARM(Commands) with Values
+analysis.GetPARAMS()
+
+# Return in polars dataframe
+analysis.GetPARAMS(in_polars=True)
+```
+
+```python
+# Return PARM(Command) with Value
+analysis.GetPARAM('EK3_IMU_MASK')
+```
+
+```python
 # Return the list of Subparameter(Columns) of the Parameter data type
 analysis.GetColumns('GPS')
 ```
