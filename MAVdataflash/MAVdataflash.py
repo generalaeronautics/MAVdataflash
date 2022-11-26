@@ -2,7 +2,7 @@ import datetime
 from pymavlink import DFReader as DF
 import polars as pl
 import matplotlib.pyplot as plt
-from MAVdataflash.DataFlashDict import __dtypes__, __dunits__, __event_id__
+from MAVdataflash.DataFlashDict import _dtypes, _dunits, _event_id
 
 class DataFlash:
     
@@ -27,16 +27,16 @@ class DataFlash:
                 DFdict['Format'] = list(DFdict['Format'])
                 DFdict['Format'].insert(0, "DT")
                 # Initializing DataFrame with FMT message 
-                DFcolumns_init = [pl.Series(column, dtype= __dtypes__[dtype]) for column, dtype in zip(DFdict['Columns'], DFdict['Format'])]
+                DFcolumns_init = [pl.Series(column, dtype= _dtypes[dtype]) for column, dtype in zip(DFdict['Columns'], DFdict['Format'])]
                 self.DFdict[DFdict['Name']] = pl.DataFrame(DFcolumns_init)
             elif DFdict['mavpackettype'] == 'FMTU':
                 DFdict['UnitIds'] = list(DFdict['UnitIds'])
                 DFdict['UnitIds'].insert(0, "-")
                 # Exctracting Units and mutliplier for columns
-                self.DFunit[self.DFdecode.id_to_name[DFdict['FmtType']]] = {column: __dunits__[unit] 
+                self.DFunit[self.DFdecode.id_to_name[DFdict['FmtType']]] = {column: _dunits[unit] 
                         for column, unit in zip(self.DFdict[self.DFdecode.id_to_name[DFdict['FmtType']]].columns, DFdict['UnitIds'])}
                             
-    def __extract__(self, dtype):
+    def _extract(self, dtype):
         DFlist = []
         if self.DFdict[dtype].shape[0] == 0:
             while 1:
@@ -72,14 +72,14 @@ class DataFlash:
 
     # Function to extract and get data 
     def GetData(self, dtype, in_polars=False):
-        self.__extract__(dtype)
+        self._extract(dtype)
         if in_polars == True: return self.DFdict[dtype]
         else: return self.DFdict[dtype].to_pandas()
 
     # Function to plot the data
     def Plot(self, dtype, column, instance=None):
         if self.isPlotable(dtype, column=column) == True:
-            self.__extract__(dtype)
+            self._extract(dtype)
             if instance == None:
                 xaxis = (self.DFdict[dtype]['DateTime']).to_list()
                 yaxis = (self.DFdict[dtype][column]).to_list()
@@ -97,9 +97,9 @@ class DataFlash:
     
     # Function to return Events details
     def GetEvents(self, in_polars=False):
-        self.__extract__('EV')
+        self._extract('EV')
         Event = self.DFdict['EV'].clone()
-        Events_DF = Event.apply(lambda column: (column[1], __event_id__[column[2]]))
+        Events_DF = Event.apply(lambda column: (column[1], _event_id[column[2]]))
         Events_DF = Events_DF.rename({"column_0": "TimeUS", "column_1": "Event"})
         Event = Event.join(Events_DF, on="TimeUS")
         if in_polars == True: return Event
@@ -107,7 +107,7 @@ class DataFlash:
     
     # Function to return PARAMS of mission 
     def GetPARAMS(self, in_dict= False, in_polars=False):
-        self.__extract__('PARM')
+        self._extract('PARM')
         PARM = self.DFdict['PARM'][['Name', 'Value']].clone()
         if in_dict == True: return self.DFdecode.params
         elif in_polars == True: return PARM

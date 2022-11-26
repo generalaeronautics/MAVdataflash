@@ -1,6 +1,6 @@
 import polars as pl
 
-__dtypes__ = {
+_dtypes = {
     "a": pl.Utf8,
     "b": pl.Int64,
     "B": pl.Int64,
@@ -25,7 +25,7 @@ __dtypes__ = {
 }
 
 # dict of units of each column [Extract from FMTU]
-__dunits__ = {
+_dunits = {
     '-': "" ,              # no units e.g. Pi, or a string
     '?': "UNKNOWN" ,       # Units which haven't been worked out yet....
     'A': "A" ,             # Ampere
@@ -65,7 +65,7 @@ __dunits__ = {
 }
 
 # dict of multiplier of each column [Extract from FMTU]  
-__dmultiplier__ = {
+_dmultiplier = {
     '-': 1 ,       # no multiplier e.g. a string
     '?': 1 ,       # multipliers which haven't been worked out yet....
 # <leave a gap here, just in case....>
@@ -85,7 +85,8 @@ __dmultiplier__ = {
     '/': 3600 , # (ampere*second => ampere*hour)
 }
 
-__event_id__ =  {
+# dict of flight event id
+_event_id =  {
     10: "ARMED",
     11: "DISARMED",
     15: "AUTO_ARMED",
