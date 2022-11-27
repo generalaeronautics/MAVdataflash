@@ -1,6 +1,31 @@
 # MAVdataflash
 Read, analyze and visualize *.bin flight data logs recorded by ArduPilot
 
+## Installation
+#### Installing via [PyPI](https://pypi.org/project/MAVdataflash/)
+Install the latest version with:
+```
+$ pip install MAVdataflash
+```
+#### Installing via [GitHub](https://github.com/generalaeronautics/MAVdataflash)
+Install directly from the source code:
+
+    $ pip install https://github.com/generalaeronautics/MAVdataflash/archive/refs/heads/latest.zip
+
+If you have git installed, you can also try:
+
+    $ pip install git+https://github.com/generalaeronautics/MAVdataflash.git
+
+You can also install by cloning or downloading the repo:
+
+    $ git clone https://github.com/generalaeronautics/MAVdataflash
+    $ cd MAVdataflash
+    $ pip install .
+
+If you get any installation or compilation errors, make sure you have the latest pip and setuptools::
+
+    $ pip install --upgrade pip setuptools
+
 ## Usage
 ```python
 from MAVdataflash import DataFlash
@@ -60,29 +85,3 @@ analysis.GetColumns('GPS')
 analysis.isPlotable('GPS')
 analysis.isPlotable('GPS', column='Alt')
 ```
-
-## Installation
-MAVdataflash is not yet in PyPI, so you can install directly from the source code:
-
-    $ pip install https://github.com/generalaeronautics/MAVdataflash/archive/refs/heads/latest.zip
-
-If you have git installed, you can also try:
-
-    $ pip install git+https://github.com/generalaeronautics/MAVdataflash.git
-
-You can also install by cloning or downloading the repo:
-
-    $ git clone https://github.com/generalaeronautics/MAVdataflash
-    $ cd MAVdataflash
-    $ pip install .
-
-If you get any installation or compilation errors, make sure you have the latest pip and setuptools::
-
-    $ pip install --upgrade pip setuptools
-
-## Requirements
-* pymavlink
-* polars
-* pandas
-* pyarrow
-* matplotlib
