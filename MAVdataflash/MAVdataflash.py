@@ -2,7 +2,8 @@ import datetime
 from pymavlink import DFReader as DF
 import polars as pl
 import matplotlib.pyplot as plt
-from MAVdataflash.DataFlashDict import _dtypes, _dunits, _event_id
+from MAVdataflash.__version__ import __version__ as version
+from MAVdataflash.DataFlashDict import _dtypes, _dunits, _event_id, _mode_id, _mode_reason
 
 class DataFlash:
     
@@ -11,7 +12,8 @@ class DataFlash:
     
     def __init__(self, filename):
         self.filename = filename
-        
+        self.version = version # MAVdataflash version
+
         self.DFdecode = DF.DFReader_binary(filename)
         while 1:
             # extracting FMT and FMTU for initialize the dataframe 
@@ -104,6 +106,17 @@ class DataFlash:
         Event = Event.join(Events_DF, on="TimeUS")
         if in_polars == True: return Event
         else: return Event.to_pandas()
+    
+    # Function to return Modes details
+    def GetModes(self, in_polars=False):
+        self._extract('MODE')
+        Mode = self.DFdict['MODE'].clone()
+        Mode_DF = Mode.apply(lambda column: (_mode_id[column[2]], _mode_reason[column[-1]])) 
+        Mode_DF = Mode_DF.rename({"column_0": "Mode", "column_1": "Rsn"})
+        for column in Mode_DF.columns:
+            Mode.replace(column, Mode_DF[column])
+        if in_polars == True: return Mode
+        else: return Mode.to_pandas()
     
     # Function to return PARAMS of mission 
     def GetPARAMS(self, in_dict= False, in_polars=False):

@@ -60,6 +60,14 @@ analysis.GetEvents(in_polars=True)
 ```
 
 ```python
+# Return the pandas dataframe of MODE(Modes) data type with Message
+analysis.GetModes()
+
+# Return in polars dataframe
+analysis.GetModes(in_polars=True)
+```
+
+```python
 # Return the pandas dataframe of PARM(Commands) with Values
 analysis.GetPARAMS()
 
