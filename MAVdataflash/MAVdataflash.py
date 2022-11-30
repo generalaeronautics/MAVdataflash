@@ -111,10 +111,11 @@ class DataFlash:
     def GetModes(self, in_polars=False):
         self._extract('MODE')
         Mode = self.DFdict['MODE'].clone()
-        Mode_DF = Mode.apply(lambda column: (_mode_id[column[2]], _mode_reason[column[-1]])) 
-        Mode_DF = Mode_DF.rename({"column_0": "Mode", "column_1": "Rsn"})
-        for column in Mode_DF.columns:
-            Mode.replace(column, Mode_DF[column])
+        Mode_DF = Mode.apply(lambda column: (column[1], _mode_id[column[2]], _mode_reason[column[-1]])) 
+        Mode_DF = Mode_DF.rename({"column_0": "TimeUS", "column_1": "Mode", "column_2": "Reason"})
+        Mode.replace('Mode', Mode_DF['Mode'])
+        Mode_DF = Mode_DF.drop('Mode')
+        Mode = Mode.join(Mode_DF, on="TimeUS")
         if in_polars == True: return Mode
         else: return Mode.to_pandas()
     
