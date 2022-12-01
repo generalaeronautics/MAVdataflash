@@ -37,10 +37,13 @@ analysis = DataFlash("flight_data.bin")
 
 ```python
 # Return data in pandas dataframe
-analysis.GetData('GPS')
+analysis.GetData('IMU')
+
+# Return data of specific instance in pandas dataframe
+analysis.GetData('IMU', instance=1)
 
 # Return data in polars dataframe
-analysis.GetData('GPS', in_polars=True)
+analysis.GetData('IMU', in_polars=True)
 ```
 
 ```python

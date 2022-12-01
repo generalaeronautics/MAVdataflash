@@ -73,10 +73,14 @@ class DataFlash:
             else: return True
 
     # Function to extract and get data 
-    def GetData(self, dtype, in_polars=False):
+    def GetData(self, dtype, instance=None, in_polars=False):
         self._extract(dtype)
-        if in_polars == True: return self.DFdict[dtype]
-        else: return self.DFdict[dtype].to_pandas()
+        if instance != None:
+            data = self.DFdict[dtype].filter(pl.col("I") == instance)
+        else:
+            data = self.DFdict[dtype]
+        if in_polars == True: return data
+        else: return data.to_pandas()
 
     # Function to plot the data
     def Plot(self, dtype, column, instance=None):
