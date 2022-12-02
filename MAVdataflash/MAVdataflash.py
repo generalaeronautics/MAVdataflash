@@ -105,9 +105,10 @@ class DataFlash:
     def GetEvents(self, in_polars=False):
         self._extract('EV')
         Event = self.DFdict['EV'].clone()
-        Events_DF = Event.apply(lambda column: (column[1], _event_id[column[2]]))
-        Events_DF = Events_DF.rename({"column_0": "TimeUS", "column_1": "Event"})
-        Event = Event.join(Events_DF, on="TimeUS")
+        if Event.shape[0] != 0:
+            Events_DF = Event.apply(lambda column: (column[1], _event_id[column[2]]))
+            Events_DF = Events_DF.rename({"column_0": "TimeUS", "column_1": "Event"})
+            Event = Event.join(Events_DF, on="TimeUS")
         if in_polars == True: return Event
         else: return Event.to_pandas()
     
