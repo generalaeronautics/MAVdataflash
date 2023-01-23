@@ -58,6 +58,16 @@ class DataFlash:
                 Data = Data.with_columns(pl.col("DateTime").dt.cast_time_unit(tu="ms"))
                 self.DFdict[dtype] = pl.concat([self.DFdict[dtype], Data], how='diagonal')
             else: return None
+    
+    # Return column name of Instance.
+    def _getInstance(self, dtype):
+        column = self.GetColumns(dtype)
+        if ('Instance' in column) or ('I' in column):
+            if 'Instance' in column:
+                return 'Instance'
+            else:
+                return 'I'
+        else: return None
 
     def GetColumns(self, dtype):
         # Return column list of data types
@@ -76,7 +86,7 @@ class DataFlash:
     def GetData(self, dtype, instance=None, in_polars=False):
         self._extract(dtype)
         if instance != None:
-            data = self.DFdict[dtype].filter(pl.col("I") == instance)
+            data = self.DFdict[dtype].filter(pl.col(self._getInstance(dtype)) == instance)
         else:
             data = self.DFdict[dtype]
         if in_polars == True: return data
