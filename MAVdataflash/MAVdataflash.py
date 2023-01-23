@@ -86,7 +86,11 @@ class DataFlash:
     def GetData(self, dtype, instance=None, in_polars=False):
         self._extract(dtype)
         if instance != None:
-            data = self.DFdict[dtype].filter(pl.col(self._getInstance(dtype)) == instance)
+            instance_column = self._getInstance(dtype)
+            if instance_column != None:
+                data = self.DFdict[dtype].filter(pl.col(instance_column) == instance)
+            else:
+                data = self.DFdict[dtype]
         else:
             data = self.DFdict[dtype]
         if in_polars == True: return data

@@ -5,7 +5,7 @@ Read, analyze and visualize *.bin flight data logs recorded by ArduPilot
 #### Installing via [PyPI](https://pypi.org/project/MAVdataflash/)
 Install the latest version with:
 ```
-$ pip install MAVdataflash --upgrade
+$ pip install --upgrade MAVdataflash
 ```
 #### Installing via [GitHub](https://github.com/generalaeronautics/MAVdataflash)
 Install directly from the source code:
