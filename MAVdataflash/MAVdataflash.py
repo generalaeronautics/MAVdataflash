@@ -55,7 +55,7 @@ class DataFlash:
             if len(DFlist) != 0:
                 # updating dataframe from DF list
                 Data = pl.DataFrame(DFlist)
-                Data = Data.with_columns(pl.col("DateTime").dt.cast_time_unit(tu="ms"))
+                Data = Data.with_columns(pl.col("DateTime").dt.cast_time_unit("ms"))
                 self.DFdict[dtype] = pl.concat([self.DFdict[dtype], Data], how='diagonal')
             else: return None
     
