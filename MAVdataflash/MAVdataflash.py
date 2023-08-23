@@ -150,3 +150,11 @@ class DataFlash:
     # Function to return value for PARAM command 
     def GetPARAM(self, command):
         return self.DFdecode.param(command)
+    
+    # Function to return value for PARAM command 
+    def GetPARAM(self, command):
+        return self.DFdecode.param(command)
+    
+    # close the log file
+    def close(self):
+        self.DFdecode.close()
