@@ -24,7 +24,8 @@ class DataFlash:
             # convert DF msg to Dict
             DFdict = DFmsg.to_dict()
             if DFdict['mavpackettype'] == 'FMT':
-                DFdict['Columns'] = DFdict['Columns'].split(',')
+                df_cols = DFdict['Columns'].split(',')
+                DFdict['Columns'] = [col.strip() for col in df_cols] # to remove leading and trailing spaces in the keys
                 DFdict['Columns'].insert(0, "DateTime")
                 DFdict['Format'] = list(DFdict['Format'])
                 DFdict['Format'].insert(0, "DT")
