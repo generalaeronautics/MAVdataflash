@@ -124,8 +124,12 @@ class DataFlash:
         self._extract('EV')
         Event = self.DFdict['EV'].clone()
         if Event.shape[0] != 0:
-            Events_DF = Event.apply(lambda column: (column[1], _event_id[column[2]]))
-            Events_DF = Events_DF.rename({"column_0": "TimeUS", "column_1": "Event"})
+            # Get the event ID column - it should be the third column after TimeUS and DateTime
+            event_id_col = Event.columns[2]  # This will get the actual column name for event ID
+            Events_DF = pl.DataFrame({
+                "TimeUS": Event["TimeUS"],
+                "Event": Event[event_id_col].map_elements(lambda x: _event_id.get(x, x), return_dtype=pl.Utf8)
+            })
             Event = Event.join(Events_DF, on="TimeUS")
         if in_polars == True: return Event
         else: return Event.to_pandas()
@@ -134,10 +138,14 @@ class DataFlash:
     def GetModes(self, in_polars=False):
         self._extract('MODE')
         Mode = self.DFdict['MODE'].clone()
-        Mode_DF = Mode.apply(lambda column: (column[1], _mode_id[column[2]], _mode_reason[column[-1]])) 
-        Mode_DF = Mode_DF.rename({"column_0": "TimeUS", "column_1": "Mode", "column_2": "Reason"})
-        Mode.replace('Mode', Mode_DF['Mode'])
-        Mode_DF = Mode_DF.drop('Mode')
+        # Get the mode and reason columns - they should be after TimeUS and DateTime
+        mode_col = Mode.columns[2]  # Mode number column
+        reason_col = Mode.columns[3]  # Mode reason column
+        Mode_DF = pl.DataFrame({
+            "TimeUS": Mode["TimeUS"],
+            "Mode": Mode[mode_col].map_elements(lambda x: _mode_id.get(x, x), return_dtype=pl.Utf8),
+            "Reason": Mode[reason_col].map_elements(lambda x: _mode_reason.get(x, x), return_dtype=pl.Utf8)
+        })
         Mode = Mode.join(Mode_DF, on="TimeUS")
         if in_polars == True: return Mode
         else: return Mode.to_pandas()
