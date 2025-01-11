@@ -4,7 +4,7 @@ from MAVdataflash.__version__ import __version__ as version
 with open('requirements.txt') as req:
     install_requires = req.read()
 
-setup(name='MAVdataflash',
+setup(name='mavdataflash',
     version=version,
     url='https://github.com/generalaeronautics/MAVdataflash',
     description='Read, analyze and visualize *.bin flight data logs recorded by ArduPilot',
@@ -14,5 +14,5 @@ setup(name='MAVdataflash',
     packages=['MAVdataflash'],
     include_package_data=True,
     install_requires=install_requires,
-    python_requires='>=3.6',
+    python_requires='>=3.8',
     )
