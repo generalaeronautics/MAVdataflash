@@ -1,5 +1,5 @@
-pymavlink<=2.4.40
-polars<=0.19.13
+pymavlink
+polars
 pandas
 pyarrow
 matplotlib
