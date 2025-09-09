@@ -8,23 +8,17 @@ Install the latest version with:
 $ pip install --upgrade mavdataflash
 ```
 #### Installing via [GitHub](https://github.com/generalaeronautics/MAVdataflash)
-Install directly from the source code:
-
-    $ pip install https://github.com/generalaeronautics/MAVdataflash/archive/refs/heads/latest.zip
-
-If you have git installed, you can also try:
-
-    $ pip install git+https://github.com/generalaeronautics/MAVdataflash.git
-
-You can also install by cloning or downloading the repo:
-
-    $ git clone https://github.com/generalaeronautics/MAVdataflash
-    $ cd MAVdataflash
-    $ pip install .
-
-If you get any installation or compilation errors, make sure you have the latest pip and setuptools::
-
-    $ pip install --upgrade pip setuptools
+Install with source code,
+```
+$ git clone https://github.com/generalaeronautics/MAVdataflash
+$ cd MAVdataflash
+$ python -m build
+$ pip install dist/*.whl
+```
+If you get any installation or compilation errors, make sure installed `build`:
+```
+$ pip install build setuptools wheel
+```
 
 ## Usage
 ```python
