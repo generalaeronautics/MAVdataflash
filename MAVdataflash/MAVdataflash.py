@@ -1,7 +1,6 @@
 import datetime
 from pymavlink import DFReader as DF
 import polars as pl
-import matplotlib.pyplot as plt
 from MAVdataflash.__version__ import __version__ as version
 from MAVdataflash.DataFlashDict import _dtypes, _dunits, _event_id, _mode_id, _mode_reason
 
