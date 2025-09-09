@@ -93,9 +93,3 @@ analysis.GetPARAM('EK3_IMU_MASK')
 # Return the list of Subparameter(Columns) of the Parameter data type
 analysis.GetColumns('GPS')
 ```
-
-```python
-# Return True if Parameter data type is plottable otherwise return as False
-analysis.isPlotable('GPS')
-analysis.isPlotable('GPS', column='Alt')
-```

@@ -77,15 +77,6 @@ class DataFlash:
         # Return column list of data types
         return self.DFdict[dtype].columns
 
-    # Function to check data type or Column is Plotable
-    def isPlotable(self, dtype, column=None):
-        if column == None:
-            if 'TimeUS' not in self.DFdict[dtype].columns: return False
-            else: return True
-        else:
-            if "TimeUS" not in self.DFdict[dtype].columns or pl.datatypes.Utf8 == self.DFdict[dtype][column].dtype: return False
-            else: return True
-
     # Function to extract and get data 
     def GetData(self, dtype, instance=None, in_polars=False):
         self._extract(dtype)
@@ -99,54 +90,32 @@ class DataFlash:
             data = self.DFdict[dtype]
         if in_polars == True: return data
         else: return data.to_pandas()
-
-    # Function to plot the data
-    def Plot(self, dtype, column, instance=None):
-        if self.isPlotable(dtype, column=column) == True:
-            self._extract(dtype)
-            if instance == None:
-                xaxis = (self.DFdict[dtype]['DateTime']).to_list()
-                yaxis = (self.DFdict[dtype][column]).to_list()
-            else:
-                xaxis = (self.DFdict[dtype].filter(pl.col("I") == instance)['DateTime']).to_list()
-                yaxis = (self.DFdict[dtype].filter(pl.col("I") == instance)[column]).to_list()
-            
-            plt.figure(f'{dtype} - {column}')
-            plt.xlabel('Time')
-            plt.ylabel(f'{column} ({self.DFunit[dtype][column]})')
-            plt.plot(xaxis, yaxis)
-            plt.show()
-        else:
-            print(f"{column} parameter is not suitable for Plotting!")
     
-    # Function to return Events details
+    # Function to return Events details    
     def GetEvents(self, in_polars=False):
         self._extract('EV')
         Event = self.DFdict['EV'].clone()
         if Event.shape[0] != 0:
-            # Get the event ID column - it should be the third column after TimeUS and DateTime
-            event_id_col = Event.columns[2]  # This will get the actual column name for event ID
-            Events_DF = pl.DataFrame({
-                "TimeUS": Event["TimeUS"],
-                "Event": Event[event_id_col].map_elements(lambda x: _event_id.get(x, x), return_dtype=pl.Utf8)
-            })
-            Event = Event.join(Events_DF, on="TimeUS")
-        if in_polars == True: return Event
-        else: return Event.to_pandas()
-    
+            # Map event IDs to their string representations
+            Event = Event.with_columns([
+                pl.col('Id').map_elements(lambda x: _event_id.get(x, "UNKNOWN"), return_dtype=pl.Utf8).alias('Event')
+            ])
+        if in_polars == True: 
+            return Event
+        else:
+            return Event.to_pandas()
+        
     # Function to return Modes details
     def GetModes(self, in_polars=False):
         self._extract('MODE')
         Mode = self.DFdict['MODE'].clone()
-        # Get the mode and reason columns - they should be after TimeUS and DateTime
-        mode_col = Mode.columns[2]  # Mode number column
-        reason_col = Mode.columns[3]  # Mode reason column
-        Mode_DF = pl.DataFrame({
-            "TimeUS": Mode["TimeUS"],
-            "Mode": Mode[mode_col].map_elements(lambda x: _mode_id.get(x, x), return_dtype=pl.Utf8),
-            "Reason": Mode[reason_col].map_elements(lambda x: _mode_reason.get(x, x), return_dtype=pl.Utf8)
-        })
-        Mode = Mode.join(Mode_DF, on="TimeUS")
+
+        # Map mode numbers and reasons to their string representations
+        Mode = Mode.with_columns([
+            pl.col('ModeNum').map_elements(lambda x: _mode_id.get(x, "UNKNOWN"), return_dtype=pl.Utf8).alias('ModeName'),
+            pl.col('Rsn').map_elements(lambda x: _mode_reason.get(x, "UNKNOWN"), return_dtype=pl.Utf8).alias('Reason')
+        ])
+
         if in_polars == True: return Mode
         else: return Mode.to_pandas()
     
@@ -162,11 +131,3 @@ class DataFlash:
     # Function to return value for PARAM command 
     def GetPARAM(self, command):
         return self.DFdecode.param(command)
-        
-    # close the log file
-    def close(self):
-        """Close the log file and clean up resources"""
-        try:
-            self.DFdecode.close()
-        except Exception as e:
-            print(f"Error closing log file: {str(e)}")
